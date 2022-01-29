@@ -1,0 +1,6 @@
+// this is a comment
+(( )){} // grouping stuff
+!*+-/=<> <= == // operators
+/* 123 abc =
+multi line comment
+*/ccc = nil "str1" 123.456
