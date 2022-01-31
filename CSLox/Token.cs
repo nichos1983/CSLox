@@ -2,22 +2,22 @@ namespace CSLox
 {
     public class Token
     {
-        public readonly TokenType _type;
-        public readonly string _lexeme;
-        public readonly object _literal;
-        public readonly int _line;
+        public readonly TokenType Type;
+        public readonly string Lexeme;
+        public readonly object? Literal;
+        public readonly int Line;
 
-        public Token(TokenType type, string lexeme, object literal, int line)
+        public Token(TokenType type, string lexeme, object? literal, int line)
         {
-            _type = type;
-            _lexeme = lexeme;
-            _literal = literal;
-            _line = line;
+            Type = type;
+            Lexeme = lexeme;
+            Literal = literal;
+            Line = line;
         }
 
         public override string ToString()
         {
-            return _type + " " + _lexeme + " " + _literal;
+            return Type + " " + Lexeme + " " + Literal;
         }
     }
 }
