@@ -57,16 +57,31 @@ namespace CSLox
         {
             Scanner scanner = new Scanner(source);
             List<Token> tokens = scanner.ScanTokens();
+            
+            Parser parser = new Parser(tokens);
+            Expr expression  = parser.Parse();
 
-            foreach(Token token in tokens)
-            {
-                Console.WriteLine(token.ToString());
-            }
+            if(_hadError)
+                return;
+            
+            Console.WriteLine(new ASTPrinter().Print(expression));
         }
 
         public static void Error(int line, string message)
         {
             Report(line, "", message);
+        }
+
+        public static void Error(Token token, string message)
+        {
+            if(token.Type == TokenType.EOF)
+            {
+                Report(token.Line, "at end", message);
+            }
+            else
+            {
+                Report(token.Line, " at'" + token.Lexeme + "'", message);
+            }
         }
 
         private static void Report(int line, string where, string message)

@@ -1,6 +1,2 @@
 // this is a comment
-(( )){} // grouping stuff
-!*+-/=<> <= == // operators
-/* 123 abc =
-multi line comment
-*/ccc = nil "str1" 123.456
+123.4 + 1 >= "a" + true != "b" + false <= 5.0 + 1.0 / 3.0

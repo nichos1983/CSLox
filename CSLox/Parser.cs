@@ -4,12 +4,26 @@ namespace CSLox
 {
     public class Parser
     {
+        private class ParseError : System.SystemException { }
+
         private readonly List<Token> _tokens;
         private int _current;
 
         public Parser(List<Token> tokens)
         {
             _tokens = tokens;
+        }
+
+        public Expr Parse()
+        {
+            try
+            {
+                return Expression();
+            }
+            catch(ParseError error)
+            {
+                return null!;
+            }
         }
 
         private Expr Expression()
@@ -95,7 +109,7 @@ namespace CSLox
                 return new Expr.Grouping(expr);
             }
 
-            throw new Exception("Expect expression.");
+            throw Error(Peek(), "Expect expression.");
         }
 
         private bool Match(params TokenType[] types)
@@ -144,7 +158,39 @@ namespace CSLox
         {
             if(Check(type))
                 return Advance();
-            throw new Exception(message);
+            throw Error(Peek(), message);
+        }
+
+        private ParseError Error(Token token, string message)
+        {
+            Lox.Error(token, message);
+            return new ParseError();
+        }
+
+        private void Synchronize()
+        {
+            Advance();
+
+            while(!IsAtEnd())
+            {
+                if(Previous().Type == TokenType.SEMICOLON)
+                    return;
+                
+                switch(Peek().Type)
+                {
+                    case TokenType.CLASS:
+                    case TokenType.FUN:
+                    case TokenType.VAR:
+                    case TokenType.FOR:
+                    case TokenType.IF:
+                    case TokenType.WHILE:
+                    case TokenType.PRINT:
+                    case TokenType.RETURN:
+                        return;
+                }
+
+                Advance();
+            }
         }
     }
 }
