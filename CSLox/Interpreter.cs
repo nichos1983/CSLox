@@ -146,9 +146,7 @@ namespace CSLox
 
             // C# bool ToString() returns capitalized word, so lox works around it
             if(obj is bool)
-            {
                 return (bool)obj ? "true" : "false";
-            }
 
             return obj.ToString();
         }
