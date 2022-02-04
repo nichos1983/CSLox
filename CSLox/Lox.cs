@@ -7,7 +7,9 @@ namespace CSLox
 {
     public class Lox
     {
-        private static bool _hadError = false;
+        private static readonly Interpreter _interpreter = new Interpreter();
+        static bool _hadError = false;
+        static bool _hadRuntimeError = false;
 
         public static void Main(string[] args)
         {
@@ -38,6 +40,9 @@ namespace CSLox
 
             if(_hadError)
                 Environment.Exit(65);
+
+            if(_hadRuntimeError)
+                Environment.Exit(70);
         }
 
         private static void RunPrompt()
@@ -64,7 +69,9 @@ namespace CSLox
             if(_hadError)
                 return;
             
-            Console.WriteLine(new ASTPrinter().Print(expression));
+            // Console.WriteLine(new ASTPrinter().Print(expression));
+
+            _interpreter.Interpret(expression);
         }
 
         public static void Error(int line, string message)
@@ -82,6 +89,12 @@ namespace CSLox
             {
                 Report(token.Line, " at'" + token.Lexeme + "'", message);
             }
+        }
+
+        public static void RuntimeError(RuntimeError error)
+        {
+            Console.WriteLine(error.Message + "\n[line " + error.Token.Line + "]");
+            _hadRuntimeError = true;
         }
 
         private static void Report(int line, string where, string message)
