@@ -17,6 +17,11 @@ namespace CSLox
             }
         }
 
+        private object Evaluate(Expr expr)
+        {
+            return expr.accept(this);
+        }
+
         public object VisitLiteralExpr(Expr.Literal literal)
         {
             return literal.Value!;
@@ -85,11 +90,6 @@ namespace CSLox
         public object VisitGroupingExpr(Expr.Grouping expr)
         {
             return Evaluate(expr.Expression);
-        }
-
-        private object Evaluate(Expr expr)
-        {
-            return expr.accept(this);
         }
 
         private bool IsTruthy(object? obj)
