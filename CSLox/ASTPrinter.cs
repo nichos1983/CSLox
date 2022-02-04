@@ -6,7 +6,7 @@ namespace CSLox
     {
         public string Print(Expr expr)
         {
-            return expr.accept(this);
+            return expr.Accept(this);
         }
 
         public string VisitLiteralExpr(Expr.Literal expr)
@@ -37,7 +37,7 @@ namespace CSLox
             foreach(Expr expr in exprs)
             {
                 builder.Append(" ");
-                builder.Append(expr.accept(this));
+                builder.Append(expr.Accept(this));
             }
             builder.Append(")");
 

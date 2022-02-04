@@ -19,7 +19,7 @@ namespace CSLox
 
         private object Evaluate(Expr expr)
         {
-            return expr.accept(this);
+            return expr.Accept(this);
         }
 
         public object VisitLiteralExpr(Expr.Literal literal)

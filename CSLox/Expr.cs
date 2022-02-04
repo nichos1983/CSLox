@@ -12,7 +12,7 @@ namespace CSLox
             R VisitGroupingExpr(Grouping expr);
         }
 
-        public abstract R accept<R>(Visitor<R> visitor);
+        public abstract R Accept<R>(Visitor<R> visitor);
 
         public class Literal : Expr
         {
@@ -23,7 +23,7 @@ namespace CSLox
                 Value = value;
             }
 
-            public override R accept<R>(Visitor<R> visitor)
+            public override R Accept<R>(Visitor<R> visitor)
             {
                 return visitor.VisitLiteralExpr(this);
             }
@@ -40,7 +40,7 @@ namespace CSLox
                 Right = right;
             }
 
-            public override R accept<R>(Visitor<R> visitor)
+            public override R Accept<R>(Visitor<R> visitor)
             {
                 return visitor.VisitUnaryExpr(this);
             }
@@ -59,7 +59,7 @@ namespace CSLox
                 Right = right;
             }
 
-            public override R accept<R>(Visitor<R> visitor)
+            public override R Accept<R>(Visitor<R> visitor)
             {
                 return visitor.VisitBinaryExpr(this);
             }
@@ -74,7 +74,7 @@ namespace CSLox
                 Expression = expression;
             }
 
-            public override R accept<R>(Visitor<R> visitor)
+            public override R Accept<R>(Visitor<R> visitor)
             {
                 return visitor.VisitGroupingExpr(this);
             }
