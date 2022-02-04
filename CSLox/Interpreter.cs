@@ -59,6 +59,10 @@ namespace CSLox
                         return (double)left + (double)right;
                     if(left is string && right is string)
                         return (string)left + (string)right;
+                    // Uncomment it to implement Challenges 2 in chapter <Evaluating expressions>
+                    // But this is not a good design idea
+                    // if(left is string || right is string)
+                    //     return left.ToString() + right.ToString();
                     throw new RuntimeError(expr.Operator, "Operands must be two numbers or two strings.");
                 case TokenType.SLASH:
                     CheckNumberOperands(expr.Operator, left, right);
