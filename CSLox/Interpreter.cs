@@ -2,14 +2,16 @@ using System.Collections.Generic;
 
 namespace CSLox
 {
-    public class Interpreter : Expr.Visitor<object>
+    public class Interpreter : Expr.Visitor<object>, Stmt.Visitor<object?>
     {
-        public void Interpret(Expr expression)
+        public void Interpret(List<Stmt> statements)
         {
             try
             {
-                object value = Evaluate(expression);
-                Console.WriteLine(Stringify(value));
+                foreach(Stmt statement in statements)
+                {
+                    Execute(statement);
+                }
             }
             catch(RuntimeError error)
             {
@@ -20,6 +22,11 @@ namespace CSLox
         private object Evaluate(Expr expr)
         {
             return expr.Accept(this);
+        }
+
+        private void Execute(Stmt stmt)
+        {
+            stmt.Accept(this);
         }
 
         public object VisitLiteralExpr(Expr.Literal literal)
@@ -94,6 +101,19 @@ namespace CSLox
         public object VisitGroupingExpr(Expr.Grouping expr)
         {
             return Evaluate(expr.Expression);
+        }
+
+        public object? VisitExpressionStmt(Stmt.Expression stmt)
+        {
+            Evaluate(stmt.Expr);
+            return null;
+        }
+
+        public object? VisitPrintStmt(Stmt.Print stmt)
+        {
+            object value = Evaluate(stmt.Expr);
+            Console.WriteLine(Stringify(value));
+            return null;
         }
 
         private bool IsTruthy(object? obj)
