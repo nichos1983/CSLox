@@ -95,6 +95,25 @@ namespace CSLox
             return expr;
         }
 
+        // Another implementation version of Assignment() in chapter 8.4.
+        // But it's ugly since _current-- is a kind of backtracing.
+        // private Expr Assignment()
+        // {
+        //     if(Match(TokenType.IDENTIFIER))
+        //     {
+        //         Token assignToken = Previous();
+        //         if(Match(TokenType.EQUAL))
+        //         {
+        //             Expr value = Assignment();
+        //             return new Expr.Assign(assignToken, value);
+        //         }
+
+        //         _current--;
+        //     }
+
+        //     return Equality();
+        // }
+
         private Expr Equality()
         {
             Expr expr = Comparison();
