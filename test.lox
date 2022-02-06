@@ -2,4 +2,4 @@
 var a = 1;
 var b = 2;
 var a = 3;
-print a + b;
+print a < b * 2.0;

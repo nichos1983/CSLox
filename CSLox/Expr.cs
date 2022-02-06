@@ -1,5 +1,4 @@
-using System;
-
+﻿
 namespace CSLox
 {
     public abstract class Expr
@@ -19,9 +18,9 @@ namespace CSLox
         {
             public readonly object? Value;
 
-            public Literal(object? value)
+            public Literal(object? @value)
             {
-                Value = value;
+                Value = @value;
             }
 
             public override R Accept<R>(Visitor<R> visitor)
@@ -35,10 +34,10 @@ namespace CSLox
             public readonly Token Operator;
             public readonly Expr Right;
 
-            public Unary(Token op, Expr right)
+            public Unary(Token @operator, Expr @right)
             {
-                Operator = op;
-                Right = right;
+                Operator = @operator;
+                Right = @right;
             }
 
             public override R Accept<R>(Visitor<R> visitor)
@@ -53,11 +52,11 @@ namespace CSLox
             public readonly Token Operator;
             public readonly Expr Right;
 
-            public Binary(Expr left, Token op, Expr right)
+            public Binary(Expr @left, Token @operator, Expr @right)
             {
-                Left = left;
-                Operator = op;
-                Right = right;
+                Left = @left;
+                Operator = @operator;
+                Right = @right;
             }
 
             public override R Accept<R>(Visitor<R> visitor)
@@ -70,9 +69,9 @@ namespace CSLox
         {
             public readonly Expr Expression;
 
-            public Grouping(Expr expression)
+            public Grouping(Expr @expression)
             {
-                Expression = expression;
+                Expression = @expression;
             }
 
             public override R Accept<R>(Visitor<R> visitor)
@@ -85,9 +84,9 @@ namespace CSLox
         {
             public readonly Token Name;
 
-            public Variable(Token name)
+            public Variable(Token @name)
             {
-                Name = name;
+                Name = @name;
             }
 
             public override R Accept<R>(Visitor<R> visitor)
@@ -95,5 +94,6 @@ namespace CSLox
                 return visitor.VisitVariableExpr(this);
             }
         }
+
     }
 }

@@ -1,0 +1,83 @@
+<#@ output extension=".cs" #>
+<#@ import namespace="System"#>
+<#@ import namespace="System.Collections"#>
+<#@ import namespace="System.Collections.Generic"#>
+<#
+    string ClassName = "Expr";
+
+    var SubclassDict = new Dictionary<string, List<KeyValuePair<string, string>>>()
+    {
+        {
+            "Literal", new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("object?", "Value")
+            }
+        },
+        {
+            "Unary", new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("Token", "Operator"),
+                new KeyValuePair<string, string>("Expr", "Right")
+            }
+        },
+        {
+            "Binary", new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("Expr", "Left"),
+                new KeyValuePair<string, string>("Token", "Operator"),
+                new KeyValuePair<string, string>("Expr", "Right")
+            }
+        },
+        {
+            "Grouping", new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("Expr", "Expression")
+            }
+        },
+        {
+            "Variable", new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("Token", "Name")
+            }
+        }
+    };
+#>
+
+namespace CSLox
+{
+    public abstract class <#=ClassName #>
+    {
+        public interface Visitor<R>
+        {
+<# foreach(var subclass in SubclassDict) {#>
+            R Visit<#= subclass.Key#>Expr(<#= subclass.Key#> expr);
+<#}#>
+        }
+
+        public abstract R Accept<R>(Visitor<R> visitor);
+
+<# foreach(var subclass in SubclassDict) {#>
+        public class <#= subclass.Key#> : <#=ClassName #>
+        {
+<# foreach(var kv in subclass.Value) {#>
+            public readonly <#= kv.Key#> <#= kv.Value#>;
+<#}#>
+
+<#
+            List<string> paramList = new List<string>();
+            foreach(var kv in subclass.Value)
+            {
+                paramList.Add(kv.Key + " @" + kv.Value.ToLower());
+            }
+#>
+            public <#= subclass.Key#>(<#= String.Join(", ", paramList)#>)
+            {
+<# foreach(var kv in subclass.Value) {#>
+                <#= kv.Value#> = @<#= kv.Value.ToLower()#>;
+<#}#>
+            }
+
+            public override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.Visit<#= subclass.Key#>Expr(this);
+            }
+        }
+
+<#}#>
+    }
+}

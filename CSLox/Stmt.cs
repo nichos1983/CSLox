@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-
+﻿
 namespace CSLox
 {
     public abstract class Stmt
@@ -17,9 +16,9 @@ namespace CSLox
         {
             public readonly Expr Expr;
 
-            public Expression(Expr expression)
+            public Expression(Expr @expr)
             {
-                Expr = expression;
+                Expr = @expr;
             }
 
             public override R Accept<R>(Visitor<R> visitor)
@@ -32,9 +31,9 @@ namespace CSLox
         {
             public readonly Expr Expr;
 
-            public Print(Expr expression)
+            public Print(Expr @expr)
             {
-                Expr = expression;
+                Expr = @expr;
             }
 
             public override R Accept<R>(Visitor<R> visitor)
@@ -48,10 +47,10 @@ namespace CSLox
             public readonly Token Name;
             public readonly Expr? Initializer;
 
-            public Var(Token name, Expr? initializer)
+            public Var(Token @name, Expr? @initializer)
             {
-                Name = name;
-                Initializer = initializer;
+                Name = @name;
+                Initializer = @initializer;
             }
 
             public override R Accept<R>(Visitor<R> visitor)
@@ -59,5 +58,6 @@ namespace CSLox
                 return visitor.VisitVarStmt(this);
             }
         }
+
     }
 }
