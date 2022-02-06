@@ -35,6 +35,13 @@
                 new KeyValuePair<string, string>("Token", "Name")
             }
         }
+        ,
+        {
+            "Assign", new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("Token", "Name"),
+                new KeyValuePair<string, string>("Expr", "Value")
+            }
+        }
     };
 #>
 

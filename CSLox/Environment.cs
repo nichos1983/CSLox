@@ -19,5 +19,16 @@ namespace CSLox
         {
             _values[name] = value;
         }
+
+        public void Assign(Token name, object? value)
+        {
+            if(_values.ContainsKey(name.Lexeme))
+            {
+                _values[name.Lexeme] = value;
+                return;
+            }
+
+            throw new RuntimeError(name, $"Undefined variable '{name.Lexeme}'.");
+        }
     }
 }

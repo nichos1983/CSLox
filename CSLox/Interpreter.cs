@@ -64,10 +64,10 @@ namespace CSLox
                     CheckNumberOperands(expr.Operator, left, right);
                     return (double)left - (double)right;
                 case TokenType.PLUS:
-                    if(left is double && right is double)
-                        return (double)left + (double)right;
-                    if(left is string && right is string)
-                        return (string)left + (string)right;
+                    if(left is double d1 && right is double d2)
+                        return d1 + d2;
+                    if(left is string s1 && right is string s2)
+                        return s1 + s2;
                     // Uncomment it to implement Challenges 2 in chapter <Evaluating expressions>
                     // But this is not a good design idea
                     // if(left is string || right is string)
@@ -110,6 +110,13 @@ namespace CSLox
             return _environment.Get(expr.Name);
         }
 
+        public object? VisitAssignExpr(Expr.Assign expr)
+        {
+            object? value = Evaluate(expr.Value);
+            _environment.Assign(expr.Name, value);
+            return value;
+        }
+
         public object? VisitExpressionStmt(Stmt.Expression stmt)
         {
             Evaluate(stmt.Expr);
@@ -137,8 +144,8 @@ namespace CSLox
         {
             if(obj == null)
                 return false;
-            if(obj is bool)
-                return (bool)obj;
+            if(obj is bool o)
+                return o;
             return true;
         }
 
@@ -182,8 +189,8 @@ namespace CSLox
             }
 
             // C# bool ToString() returns capitalized word, so lox works around it
-            if(obj is bool)
-                return (bool)obj ? "true" : "false";
+            if(obj is bool o)
+                return o ? "true" : "false";
 
             return obj.ToString();
         }
