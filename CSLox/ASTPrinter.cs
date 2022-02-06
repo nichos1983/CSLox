@@ -29,6 +29,11 @@ namespace CSLox
             return Parenthesize("group", expr.Expression);
         }
 
+        public string VisitVariableExpr(Expr.Variable expr)
+        {
+            return Parenthesize(expr.Name.Lexeme);
+        }
+
         private string Parenthesize(string name, params Expr[] exprs)
         {
             StringBuilder builder = new StringBuilder();

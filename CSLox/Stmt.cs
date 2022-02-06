@@ -8,6 +8,7 @@ namespace CSLox
         {
             R VisitExpressionStmt(Expression stmt);
             R VisitPrintStmt(Print stmt);
+            R VisitVarStmt(Var stmt);
         }
 
         public abstract R Accept<R>(Visitor<R> visitor);
@@ -39,6 +40,23 @@ namespace CSLox
             public override R Accept<R>(Visitor<R> visitor)
             {
                 return visitor.VisitPrintStmt(this);
+            }
+        }
+
+        public class Var : Stmt
+        {
+            public readonly Token Name;
+            public readonly Expr? Initializer;
+
+            public Var(Token name, Expr? initializer)
+            {
+                Name = name;
+                Initializer = initializer;
+            }
+
+            public override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitVarStmt(this);
             }
         }
     }

@@ -16,7 +16,7 @@ namespace CSLox
             if(args.Length > 1)
             {
                 Console.WriteLine("Usage: lox [script]");
-                Environment.Exit(64);
+                System.Environment.Exit(64);
             }
             else if(args.Length == 1)
             {
@@ -39,10 +39,10 @@ namespace CSLox
             Run(str);
 
             if(_hadError)
-                Environment.Exit(65);
+                System.Environment.Exit(65);
 
             if(_hadRuntimeError)
-                Environment.Exit(70);
+                System.Environment.Exit(70);
         }
 
         private static void RunPrompt()
@@ -87,13 +87,13 @@ namespace CSLox
             }
             else
             {
-                Report(token.Line, " at'" + token.Lexeme + "'", message);
+                Report(token.Line, $" at '{token.Lexeme}'", message);
             }
         }
 
         public static void RuntimeError(RuntimeError error)
         {
-            Console.WriteLine(error.Message + "\n[line " + error.Token.Line + "]");
+            Console.WriteLine(error.Message + $"\n[line {error.Token.Line}]");
             _hadRuntimeError = true;
         }
 

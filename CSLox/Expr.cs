@@ -10,6 +10,7 @@ namespace CSLox
             R VisitUnaryExpr(Unary expr);
             R VisitBinaryExpr(Binary expr);
             R VisitGroupingExpr(Grouping expr);
+            R VisitVariableExpr(Variable expr);
         }
 
         public abstract R Accept<R>(Visitor<R> visitor);
@@ -77,6 +78,21 @@ namespace CSLox
             public override R Accept<R>(Visitor<R> visitor)
             {
                 return visitor.VisitGroupingExpr(this);
+            }
+        }
+
+        public class Variable : Expr
+        {
+            public readonly Token Name;
+
+            public Variable(Token name)
+            {
+                Name = name;
+            }
+
+            public override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitVariableExpr(this);
             }
         }
     }

@@ -2,8 +2,10 @@ using System.Collections.Generic;
 
 namespace CSLox
 {
-    public class Interpreter : Expr.Visitor<object>, Stmt.Visitor<object?>
+    public class Interpreter : Expr.Visitor<object?>, Stmt.Visitor<object?>
     {
+        private Environment _environment = new Environment();
+
         public void Interpret(List<Stmt> statements)
         {
             try
@@ -19,7 +21,7 @@ namespace CSLox
             }
         }
 
-        private object Evaluate(Expr expr)
+        private object? Evaluate(Expr expr)
         {
             return expr.Accept(this);
         }
@@ -29,12 +31,12 @@ namespace CSLox
             stmt.Accept(this);
         }
 
-        public object VisitLiteralExpr(Expr.Literal literal)
+        public object? VisitLiteralExpr(Expr.Literal literal)
         {
-            return literal.Value!;
+            return literal.Value;
         }
 
-        public object VisitUnaryExpr(Expr.Unary expr)
+        public object? VisitUnaryExpr(Expr.Unary expr)
         {
             object? right = Evaluate(expr.Right);
             switch(expr.Operator.Type)
@@ -42,19 +44,19 @@ namespace CSLox
                 case TokenType.BANG:
                     return !IsTruthy(right);
                 case TokenType.MINUS:
-                    return -(double)right!;
+                    return -(double)right;
                 
                 default:
                     break;
             }
 
-            return null!;
+            return null;
         }
 
-        public object VisitBinaryExpr(Expr.Binary expr)
+        public object? VisitBinaryExpr(Expr.Binary expr)
         {
-            object left = Evaluate(expr.Left);
-            object right = Evaluate(expr.Right);
+            object left = Evaluate(expr.Left)!;
+            object right = Evaluate(expr.Right)!;
 
             switch(expr.Operator.Type)
             {
@@ -95,12 +97,17 @@ namespace CSLox
                     return IsEqual(left, right);
             }
 
-            return null!;
+            return null;
         }
 
-        public object VisitGroupingExpr(Expr.Grouping expr)
+        public object? VisitGroupingExpr(Expr.Grouping expr)
         {
             return Evaluate(expr.Expression);
+        }
+
+        public object? VisitVariableExpr(Expr.Variable expr)
+        {
+            return _environment.Get(expr.Name);
         }
 
         public object? VisitExpressionStmt(Stmt.Expression stmt)
@@ -111,8 +118,18 @@ namespace CSLox
 
         public object? VisitPrintStmt(Stmt.Print stmt)
         {
-            object value = Evaluate(stmt.Expr);
+            object? value = Evaluate(stmt.Expr);
             Console.WriteLine(Stringify(value));
+            return null;
+        }
+
+        public object? VisitVarStmt(Stmt.Var stmt)
+        {
+            object? value = null;
+            if(stmt.Initializer != null)
+                value = Evaluate(stmt.Initializer);
+            
+            _environment.Define(stmt.Name.Lexeme, value);
             return null;
         }
 
@@ -149,7 +166,7 @@ namespace CSLox
             throw new RuntimeError(op, "Operands must be numbers.");
         }
 
-        private string? Stringify(object obj)
+        private string? Stringify(object? obj)
         {
             if(obj == null)
                 return "nil";
