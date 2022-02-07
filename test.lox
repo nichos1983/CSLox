@@ -1,6 +1,37 @@
 // this is a comment
-var a = 1;
-var b = 2;
-b = a = a + b;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+    var a = "outer a";
+    var b = "outer b";
+    {
+        var a = "inner a";
+        print a;
+        print b;
+        print c;
+    }
+    print a;
+    print b;
+    print c;
+}
 print a;
-print b + 1;
+print b;
+print c;
+
+var a = 2;
+var b = 3;
+if(a + b > 4)
+    print "then branch1";
+else
+    print "else branch1";
+
+if(a + b * 2 != 8)
+    print "then branch2";
+else
+    print "else branch2";
+
+print "hi" or 2;
+print nil or "yes";
+print nil and "haha";
+print "haha" and 1;

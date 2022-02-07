@@ -53,9 +53,28 @@ namespace CSLox
 
         private Stmt Statement()
         {
+            if(Match(TokenType.IF))
+                return IfStatement();
             if(Match(TokenType.PRINT))
                 return PrintStatement();
+            if(Match(TokenType.LEFT_BRACE))
+                return new Stmt.Block(Block());
+
             return ExpressionStatement();
+        }
+
+        private Stmt IfStatement()
+        {
+            Consume(TokenType.LEFT_PAREN, "Expect '(' after 'if'.");
+            Expr condition = Expression();
+            Consume(TokenType.RIGHT_PAREN, "Expect ')' after if condition.");
+
+            Stmt thenBranch = Statement();
+            Stmt? elseBranch = null;
+            if(Match(TokenType.ELSE))
+                elseBranch = Statement();
+            
+            return new Stmt.If(condition, thenBranch, elseBranch);
         }
 
         private Stmt PrintStatement()
@@ -63,6 +82,16 @@ namespace CSLox
             Expr value = Expression();
             Consume(TokenType.SEMICOLON, "Expect ';' after value.");
             return new Stmt.Print(value);
+        }
+
+        private List<Stmt> Block()
+        {
+            List<Stmt> statements = new List<Stmt>();
+            while(!Check(TokenType.RIGHT_BRACE) && !IsAtEnd())
+                statements.Add(Declaration());
+            
+            Consume(TokenType.RIGHT_BRACE, "Expect '}' after block.");
+            return statements;
         }
 
         private Stmt ExpressionStatement()
@@ -79,7 +108,7 @@ namespace CSLox
 
         private Expr Assignment()
         {
-            Expr expr = Equality();
+            Expr expr = Or();
 
             if(Match(TokenType.EQUAL))
             {
@@ -113,6 +142,34 @@ namespace CSLox
 
         //     return Equality();
         // }
+
+        private Expr Or()
+        {
+            Expr expr = And();
+
+            while(Match(TokenType.OR))
+            {
+                Token op = Previous();
+                Expr right = And();
+                expr = new Expr.Logical(expr, op, right);
+            }
+
+            return expr;
+        }
+
+        private Expr And()
+        {
+            Expr expr = Equality();
+
+            while(Match(TokenType.AND))
+            {
+                Token op = Previous();
+                Expr right = Equality();
+                expr = new Expr.Logical(expr, op, right);
+            }
+
+            return expr;
+        }
 
         private Expr Equality()
         {

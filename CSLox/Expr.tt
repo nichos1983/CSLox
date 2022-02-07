@@ -13,6 +13,13 @@
             }
         },
         {
+            "Logical", new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("Expr", "Left"),
+                new KeyValuePair<string, string>("Token", "Operator"),
+                new KeyValuePair<string, string>("Expr", "Right")
+            }
+        },
+        {
             "Unary", new List<KeyValuePair<string, string>>{
                 new KeyValuePair<string, string>("Token", "Operator"),
                 new KeyValuePair<string, string>("Expr", "Right")

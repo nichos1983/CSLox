@@ -4,7 +4,7 @@ namespace CSLox
 {
     public class Interpreter : Expr.Visitor<object?>, Stmt.Visitor<object?>
     {
-        private Environment _environment = new Environment();
+        private Environment _environment = new Environment(null);
 
         public void Interpret(List<Stmt> statements)
         {
@@ -31,9 +31,27 @@ namespace CSLox
             stmt.Accept(this);
         }
 
-        public object? VisitLiteralExpr(Expr.Literal literal)
+        public object? VisitLiteralExpr(Expr.Literal expr)
         {
-            return literal.Value;
+            return expr.Value;
+        }
+
+        public object? VisitLogicalExpr(Expr.Logical expr)
+        {
+            object? left = Evaluate(expr.Left);
+            
+            if(expr.Operator.Type == TokenType.OR)
+            {
+                if(IsTruthy(left))
+                    return left;
+            }
+            else
+            {
+                if(!IsTruthy(left))
+                    return left;
+            }
+
+            return Evaluate(expr.Right);
         }
 
         public object? VisitUnaryExpr(Expr.Unary expr)
@@ -117,9 +135,25 @@ namespace CSLox
             return value;
         }
 
+        public object? VisitBlockStmt(Stmt.Block stmt)
+        {
+            ExecuteBlock(stmt.Statements, new Environment(_environment));
+            return null;
+        }
+
         public object? VisitExpressionStmt(Stmt.Expression stmt)
         {
             Evaluate(stmt.Expr);
+            return null;
+        }
+
+        public object? VisitIfStmt(Stmt.If stmt)
+        {
+            if(IsTruthy(Evaluate(stmt.Condition)))
+                Execute(stmt.ThenBranch);
+            else if(stmt.ElseBranch != null)
+                Execute(stmt.ElseBranch);
+            
             return null;
         }
 
@@ -193,6 +227,21 @@ namespace CSLox
                 return o ? "true" : "false";
 
             return obj.ToString();
+        }
+
+        private void ExecuteBlock(List<Stmt> statements, Environment environment)
+        {
+            Environment previous = _environment;
+            try
+            {
+                _environment = environment;
+                foreach(Stmt statement in statements)
+                    Execute(statement);
+            }
+            finally
+            {
+                _environment = previous;
+            }
         }
     }
 }

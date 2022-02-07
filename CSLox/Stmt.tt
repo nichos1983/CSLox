@@ -8,8 +8,20 @@
     var SubclassDict = new Dictionary<string, List<KeyValuePair<string, string>>>()
     {
         {
+            "Block", new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("List<Stmt>", "Statements")
+            }
+        },
+        {
             "Expression", new List<KeyValuePair<string, string>>{
                 new KeyValuePair<string, string>("Expr", "Expr")
+            }
+        },
+        {
+            "If", new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("Expr", "Condition"),
+                new KeyValuePair<string, string>("Stmt", "ThenBranch"),
+                new KeyValuePair<string, string>("Stmt?", "ElseBranch")
             }
         },
         {
