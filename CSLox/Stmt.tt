@@ -34,6 +34,12 @@
                 new KeyValuePair<string, string>("Token", "Name"),
                 new KeyValuePair<string, string>("Expr?", "Initializer")
             }
+        },
+        {
+            "While", new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("Expr", "Condition"),
+                new KeyValuePair<string, string>("Stmt", "Body")
+            }
         }
     };
 #>

@@ -174,6 +174,14 @@ namespace CSLox
             return null;
         }
 
+        public object? VisitWhileStmt(Stmt.While stmt)
+        {
+            while(IsTruthy(Evaluate(stmt.Condition)))
+                Execute(stmt.Body);
+            
+            return null;
+        }
+
         private bool IsTruthy(object? obj)
         {
             if(obj == null)
