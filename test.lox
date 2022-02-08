@@ -1,7 +1,9 @@
-// this is a comment
 var a = 0;
-while(a < 5)
+var temp;
+for(var b = 1; a < 100; b = temp)
 {
+    a = a + b;
     print a;
-    a = a + 1;
+    temp = a;
+    a = b;
 }

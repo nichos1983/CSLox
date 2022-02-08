@@ -1,26 +1,20 @@
 (* This is the grammar description using EBNF. *)
 
-expression  = literal | unary | binary | grouping;
-
-literal     = NUMBER | STRING | "true" | "false" | "nil";
-grouping    = "(" expression ")";
-unary       = ("-" | "!") expression;
-binary      = expression operator expression;
-operator    = "==" | "!=" | "<" | "<=" | ">" | ">="
-            | "+"  | "-"  | "*" | "/" ;
-
-
 program     = declaration* EOF;
 declaration = varDecl
             | statement;
 (* Note that in class hierarchy, Var is subclass of Stmt. *)
 varDecl     = "var" IDENTIFIER ("=" expression)? ";";
 statement   = exprStmt
+            | forStmt
             | ifStmt
             | printStmt
             | whileStmt
             | block;
 exprStmt    = expression ";";
+forStmt     = "for" "(" varDecl | exprStmt | ";")
+            expression? ";"
+            expression? ")" statement;
 ifStmt      = "if" "(" expression ")" statement
             ("else" statement)?;
 printStmt   = "print" expression ";";
