@@ -118,6 +118,24 @@ namespace CSLox
             return null;
         }
 
+        public object? VisitCallExpr(Expr.Call expr)
+        {
+            object callee = Evaluate(expr.Callee)!;
+
+            List<object?> arguments = new List<object?>();
+            foreach(Expr argument in expr.Arguments)
+                arguments.Add(Evaluate(argument));
+            
+            if(callee is not LoxCallable)
+                throw new RuntimeError(expr.Paren, "Can only call functions and classes.");
+            
+            LoxCallable function = (LoxCallable)callee;
+            if(arguments.Count != function.Arity())
+                throw new RuntimeError(expr.Paren, $"Expected {function.Arity()} arguments but got {arguments.Count}.");
+            
+            return function.Call(this, arguments);
+        }
+
         public object? VisitGroupingExpr(Expr.Grouping expr)
         {
             return Evaluate(expr.Expression);

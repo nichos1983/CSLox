@@ -9,6 +9,7 @@ namespace CSLox
             R VisitLogicalExpr(Logical expr);
             R VisitUnaryExpr(Unary expr);
             R VisitBinaryExpr(Binary expr);
+            R VisitCallExpr(Call expr);
             R VisitGroupingExpr(Grouping expr);
             R VisitVariableExpr(Variable expr);
             R VisitAssignExpr(Assign expr);
@@ -83,6 +84,25 @@ namespace CSLox
             public override R Accept<R>(Visitor<R> visitor)
             {
                 return visitor.VisitBinaryExpr(this);
+            }
+        }
+
+        public class Call : Expr
+        {
+            public readonly Expr Callee;
+            public readonly Token Paren;
+            public readonly List<Expr> Arguments;
+
+            public Call(Expr @callee, Token @paren, List<Expr> @arguments)
+            {
+                Callee = @callee;
+                Paren = @paren;
+                Arguments = @arguments;
+            }
+
+            public override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitCallExpr(this);
             }
         }
 

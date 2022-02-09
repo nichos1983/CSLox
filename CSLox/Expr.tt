@@ -33,6 +33,13 @@
             }
         },
         {
+            "Call", new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("Expr", "Callee"),
+                new KeyValuePair<string, string>("Token", "Paren"),
+                new KeyValuePair<string, string>("List<Expr>", "Arguments")
+            }
+        },
+        {
             "Grouping", new List<KeyValuePair<string, string>>{
                 new KeyValuePair<string, string>("Expr", "Expression")
             }
