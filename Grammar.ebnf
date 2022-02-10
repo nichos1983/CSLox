@@ -1,8 +1,12 @@
 (* This is the grammar description using EBNF. *)
 
 program     = declaration* EOF;
-declaration = varDecl
+declaration = funDecl
+            | varDecl
             | statement;
+funDecl     = "fun" function;
+function    = IDENTIFIER "(" parameters? ")" block;
+parameters  = IDENTIFIER ("," IDENTIFIER)*;
 (* Note that in class hierarchy, Var is subclass of Stmt. *)
 varDecl     = "var" IDENTIFIER ("=" expression)? ";";
 statement   = exprStmt

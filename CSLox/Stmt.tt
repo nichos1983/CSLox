@@ -18,6 +18,13 @@
             }
         },
         {
+            "Function", new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("Token", "Name"),
+                new KeyValuePair<string, string>("List<Token>", "Params"),
+                new KeyValuePair<string, string>("List<Stmt>", "Body")
+            }
+        },
+        {
             "If", new List<KeyValuePair<string, string>>{
                 new KeyValuePair<string, string>("Expr", "Condition"),
                 new KeyValuePair<string, string>("Stmt", "ThenBranch"),

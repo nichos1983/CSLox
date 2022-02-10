@@ -4,7 +4,14 @@ namespace CSLox
 {
     public class Interpreter : Expr.Visitor<object?>, Stmt.Visitor<object?>
     {
-        private Environment _environment = new Environment(null);
+        private readonly Environment _globals = new Environment(null);
+        private Environment _environment;
+
+        public Interpreter()
+        {
+            _environment = _globals; // C# can not assign it in field initializer
+            _globals.Define("clock", new NativeClockFunction());
+        }
 
         public void Interpret(List<Stmt> statements)
         {

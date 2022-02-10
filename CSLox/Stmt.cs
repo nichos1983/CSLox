@@ -7,6 +7,7 @@ namespace CSLox
         {
             R VisitBlockStmt(Block stmt);
             R VisitExpressionStmt(Expression stmt);
+            R VisitFunctionStmt(Function stmt);
             R VisitIfStmt(If stmt);
             R VisitPrintStmt(Print stmt);
             R VisitVarStmt(Var stmt);
@@ -42,6 +43,25 @@ namespace CSLox
             public override R Accept<R>(Visitor<R> visitor)
             {
                 return visitor.VisitExpressionStmt(this);
+            }
+        }
+
+        public class Function : Stmt
+        {
+            public readonly Token Name;
+            public readonly List<Token> Params;
+            public readonly List<Stmt> Body;
+
+            public Function(Token @name, List<Token> @params, List<Stmt> @body)
+            {
+                Name = @name;
+                Params = @params;
+                Body = @body;
+            }
+
+            public override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitFunctionStmt(this);
             }
         }
 

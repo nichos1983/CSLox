@@ -1,9 +1,12 @@
+print clock();
 var a = 0;
 var temp;
-for(var b = 1; a < 100; b = temp)
+for(var b = 1; a < 1000; b = temp)
 {
     a = a + b;
     print a;
     temp = a;
     a = b;
 }
+
+print clock();
