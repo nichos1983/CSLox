@@ -174,7 +174,7 @@ namespace CSLox
 
         public object? VisitFunctionStmt(Stmt.Function stmt)
         {
-            LoxFunction function = new LoxFunction(stmt);
+            LoxFunction function = new LoxFunction(stmt, _environment);
             _environment.Define(stmt.Name.Lexeme, function);
             return null;
         }
