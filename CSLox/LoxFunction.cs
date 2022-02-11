@@ -23,7 +23,15 @@ namespace CSLox
             for(int i = 0; i < _declaration.Params.Count; i++)
                 environment.Define(_declaration.Params[i].Lexeme, arguments[i]);
             
-            interpreter.ExecuteBlock(_declaration.Body, environment);
+            try
+            {
+                interpreter.ExecuteBlock(_declaration.Body, environment);
+            }
+            catch(Return returnValue)
+            {
+                // Fib example test shows exception is running deadly slow.
+                return returnValue.Value;
+            }
             return null;
         }
 
