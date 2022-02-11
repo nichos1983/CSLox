@@ -4,13 +4,13 @@ namespace CSLox
 {
     public class Interpreter : Expr.Visitor<object?>, Stmt.Visitor<object?>
     {
-        private readonly Environment _globals = new Environment(null);
+        public readonly Environment Globals = new Environment(null);
         private Environment _environment;
 
         public Interpreter()
         {
-            _environment = _globals; // C# can not assign it in field initializer
-            _globals.Define("clock", new NativeClockFunction());
+            _environment = Globals; // C# can not assign it in field initializer
+            Globals.Define("clock", new NativeClockFunction());
         }
 
         public void Interpret(List<Stmt> statements)
@@ -172,6 +172,13 @@ namespace CSLox
             return null;
         }
 
+        public object? VisitFunctionStmt(Stmt.Function stmt)
+        {
+            LoxFunction function = new LoxFunction(stmt);
+            _environment.Define(stmt.Name.Lexeme, function);
+            return null;
+        }
+
         public object? VisitIfStmt(Stmt.If stmt)
         {
             if(IsTruthy(Evaluate(stmt.Condition)))
@@ -262,7 +269,7 @@ namespace CSLox
             return obj.ToString();
         }
 
-        private void ExecuteBlock(List<Stmt> statements, Environment environment)
+        public void ExecuteBlock(List<Stmt> statements, Environment environment)
         {
             Environment previous = _environment;
             try
