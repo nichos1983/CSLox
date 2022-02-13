@@ -1,15 +1,19 @@
 namespace CSLox
 {
-    // Stmt.Function is compile-time syntax node of function declaration/definition.
-    // Expr.Call is compile-time syntax node of function call.
-    // LoxFunction is run-time wrapper of Stmt.Function.
+    // 1. Stmt.Function is a compile-time syntax node of function statement definition.
+    // 2. Expr.Function is a compile-time syntax node of function expression, Added in Challenges 10.2.
+    //    It's separated from Stmt.Function to be reusable between named function and anonymous function.
+    // 3. Expr.Call is compile-time syntax node of function call.
+    // 4. LoxFunction is run-time wrapper of Stmt.Function.
     class LoxFunction : LoxCallable
     {
-        private readonly Stmt.Function _declaration;
+        private readonly string? _name;
+        private readonly Expr.Function _declaration;
         private readonly Environment _closure;
         
-        public LoxFunction(Stmt.Function declaration, Environment closure)
+        public LoxFunction(string? name, Expr.Function declaration, Environment closure)
         {
+            _name = name;
             _declaration = declaration;
             _closure = closure;
         }
@@ -39,7 +43,9 @@ namespace CSLox
 
         public override string ToString()
         {
-            return $"<fn {_declaration.Name.Lexeme}>";
+            if(string.IsNullOrEmpty(_name))
+                return "<fn>";
+            return $"<fn {_name}>";
         }
     }
 

@@ -50,14 +50,12 @@ namespace CSLox
         public class Function : Stmt
         {
             public readonly Token Name;
-            public readonly List<Token> Params;
-            public readonly List<Stmt> Body;
+            public readonly Expr.Function FunctionBody;
 
-            public Function(Token @name, List<Token> @params, List<Stmt> @body)
+            public Function(Token @name, Expr.Function @functionbody)
             {
                 Name = @name;
-                Params = @params;
-                Body = @body;
+                FunctionBody = @functionbody;
             }
 
             public override R Accept<R>(Visitor<R> visitor)

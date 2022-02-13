@@ -1,14 +1,26 @@
-fun makeCounter() {
-    var i = 0;
-    fun count() {
-        i = i + 1;
-        print i;
+fun iterate(fn, count)
+{
+    print fn;
+    for(var i = 0; i < count; i = i + 1)
+    {
+        print fn(i);
     }
-
-    return count;
 }
 
-var counter = makeCounter();
-counter();
-counter();
-counter();
+iterate(fun (a) {
+    return a * 2;
+}, 5);
+
+fun add(a)
+{
+    return a + 1;
+}
+
+iterate(add, 5);
+
+fun whichFn(fn)
+{
+    print fn;
+}
+
+whichFn(fun () {});

@@ -29,6 +29,11 @@ namespace CSLox
             return Parenthesize(expr.Operator.Lexeme, expr.Left, expr.Right);
         }
 
+        public string VisitFunctionExpr(Expr.Function expr)
+        {
+            return "function";
+        }
+
         public string VisitCallExpr(Expr.Call expr)
         {
             return Parenthesize("call", expr.Callee);

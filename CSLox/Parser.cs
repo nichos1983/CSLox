@@ -28,7 +28,7 @@ namespace CSLox
         {
             try
             {
-                if(Match(TokenType.FUN))
+                if(Match(TokenType.FUN) && Check(TokenType.IDENTIFIER))
                     return Function("function");
                 if(Match(TokenType.VAR))
                     return VarDeclaration();
@@ -44,6 +44,11 @@ namespace CSLox
         private Stmt.Function Function(string kind)
         {
             Token name = Consume(TokenType.IDENTIFIER, $"Expect {kind} name.");
+            return new Stmt.Function(name, FunctionBody(kind));
+        }
+
+        private Expr.Function FunctionBody(string kind)
+        {
             Consume(TokenType.LEFT_PAREN, $"Expect '(' after {kind} name.");
             List<Token> parameters = new List<Token>();
             if(!Check(TokenType.RIGHT_PAREN))
@@ -61,7 +66,7 @@ namespace CSLox
 
             Consume(TokenType.LEFT_BRACE, "Expect '{' before " + kind + " body.");
             List<Stmt> body = Block();
-            return new Stmt.Function(name, parameters, body);
+            return new Expr.Function(parameters, body);
         }
 
         private Stmt VarDeclaration()
@@ -378,6 +383,9 @@ namespace CSLox
                 Consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.");
                 return new Expr.Grouping(expr);
             }
+
+            if(Match(TokenType.FUN))
+                return FunctionBody("function");
 
             throw Error(Peek(), "Expect expression.");
         }

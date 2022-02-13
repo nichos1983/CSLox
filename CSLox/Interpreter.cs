@@ -125,6 +125,11 @@ namespace CSLox
             return null;
         }
 
+        public object? VisitFunctionExpr(Expr.Function expr)
+        {
+            return new LoxFunction(null, expr, _environment);
+        }
+
         public object? VisitCallExpr(Expr.Call expr)
         {
             object callee = Evaluate(expr.Callee)!;
@@ -174,8 +179,8 @@ namespace CSLox
 
         public object? VisitFunctionStmt(Stmt.Function stmt)
         {
-            LoxFunction function = new LoxFunction(stmt, _environment);
-            _environment.Define(stmt.Name.Lexeme, function);
+            string fnName = stmt.Name.Lexeme;
+            _environment.Define(fnName, new LoxFunction(fnName, stmt.FunctionBody, _environment));
             return null;
         }
 

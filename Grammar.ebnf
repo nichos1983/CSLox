@@ -5,7 +5,8 @@ declaration = funDecl
             | varDecl
             | statement;
 funDecl     = "fun" function;
-function    = IDENTIFIER "(" parameters? ")" block;
+function    = IDENTIFIER functionBody;
+functionBody = "(" parameters? ")" block;
 parameters  = IDENTIFIER ("," IDENTIFIER)*;
 (* Note that in class hierarchy, Var is subclass of Stmt. *)
 varDecl     = "var" IDENTIFIER ("=" expression)? ";";
@@ -41,4 +42,5 @@ call        = primary ("(" arguments? ")")*;
 arguments   = expression ("," expression)*;
 primary     = NUMBER | STRING | "true" | "false" | "nil"
             | "(" expression ")"
+            | "fun" functionBody
             | IDENTIFIER;

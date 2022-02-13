@@ -20,8 +20,7 @@
         {
             "Function", new List<KeyValuePair<string, string>>{
                 new KeyValuePair<string, string>("Token", "Name"),
-                new KeyValuePair<string, string>("List<Token>", "Params"),
-                new KeyValuePair<string, string>("List<Stmt>", "Body")
+                new KeyValuePair<string, string>("Expr.Function", "FunctionBody")
             }
         },
         {
