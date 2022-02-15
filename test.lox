@@ -1,26 +1,7 @@
-fun iterate(fn, count)
+fun bad()
 {
-    print fn;
-    for(var i = 0; i < count; i = i + 1)
-    {
-        print fn(i);
-    }
+    var a = 1;
+    var a = 2;
 }
 
-iterate(fun (a) {
-    return a * 2;
-}, 5);
-
-fun add(a)
-{
-    return a + 1;
-}
-
-iterate(add, 5);
-
-fun whichFn(fn)
-{
-    print fn;
-}
-
-whichFn(fun () {});
+return 1;

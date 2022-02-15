@@ -6,6 +6,7 @@ namespace CSLox
     {
         public readonly Environment Globals = new Environment(null);
         private Environment _environment;
+        private readonly Dictionary<Expr, int> _locals = new Dictionary<Expr, int>();
 
         public Interpreter()
         {
@@ -155,13 +156,24 @@ namespace CSLox
 
         public object? VisitVariableExpr(Expr.Variable expr)
         {
-            return _environment.Get(expr.Name);
+            return LookUpVariable(expr.Name, expr);
         }
 
         public object? VisitAssignExpr(Expr.Assign expr)
         {
             object? value = Evaluate(expr.Value);
-            _environment.Assign(expr.Name, value);
+            
+            int distance;
+            if(_locals.ContainsKey(expr))
+            {
+                distance = _locals[expr];
+                _environment.AssignAt(distance, expr.Name, value);
+            }
+            else
+            {
+                Globals.Assign(expr.Name, value);
+            }
+            
             return value;
         }
 
@@ -295,6 +307,25 @@ namespace CSLox
             finally
             {
                 _environment = previous;
+            }
+        }
+
+        public void Resolve(Expr expr, int depth)
+        {
+            _locals.Add(expr, depth);
+        }
+
+        private object? LookUpVariable(Token name, Expr expr)
+        {
+            int distance;
+            if(_locals.ContainsKey(expr))
+            {
+                distance = _locals[expr];
+                return _environment.GetAt(distance, name.Lexeme);
+            }
+            else
+            {
+                return Globals.Get(name);
             }
         }
     }

@@ -71,6 +71,12 @@ namespace CSLox
             
             // Console.WriteLine(new ASTPrinter().Print(expression));
 
+            Resolver resolver = new Resolver(_interpreter);
+            resolver.Resolve(statements);
+
+            if(_hadError)
+                return;
+
             _interpreter.Interpret(statements);
         }
 
