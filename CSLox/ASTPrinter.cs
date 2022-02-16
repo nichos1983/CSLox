@@ -19,6 +19,11 @@ namespace CSLox
             return Parenthesize(expr.Operator.Lexeme, expr.Left, expr.Right);
         }
 
+        public string VisitSetExpr(Expr.Set expr)
+        {
+            return Parenthesize(expr.Name.Lexeme, expr.Object, expr.Value);
+        }
+
         public string VisitUnaryExpr(Expr.Unary expr)
         {
             return Parenthesize(expr.Operator.Lexeme, expr.Right);
@@ -37,6 +42,11 @@ namespace CSLox
         public string VisitCallExpr(Expr.Call expr)
         {
             return Parenthesize("call", expr.Callee);
+        }
+
+        public string VisitGetExpr(Expr.Get expr)
+        {
+            return Parenthesize(expr.Name.Lexeme, expr.Object);
         }
 
         public string VisitGroupingExpr(Expr.Grouping expr)

@@ -62,6 +62,18 @@ namespace CSLox
             return Evaluate(expr.Right);
         }
 
+        public object? VisitSetExpr(Expr.Set expr)
+        {
+            object? obj = Evaluate(expr.Object);
+
+            if(obj is LoxInstance o)
+                throw new RuntimeError(expr.Name, "Only instance have fields.");
+            
+            object? value = Evaluate(expr.Value);
+            ((LoxInstance)obj!).Set(expr.Name, value);
+            return value;
+        }
+
         public object? VisitUnaryExpr(Expr.Unary expr)
         {
             object? right = Evaluate(expr.Right);
@@ -149,6 +161,15 @@ namespace CSLox
             return function.Call(this, arguments);
         }
 
+        public object? VisitGetExpr(Expr.Get expr)
+        {
+            object? obj = Evaluate(expr.Object);
+            if(obj is LoxInstance o)
+                return o.Get(expr.Name);
+            
+            throw new RuntimeError(expr.Name, "Only instance have properties.");
+        }
+
         public object? VisitGroupingExpr(Expr.Grouping expr)
         {
             return Evaluate(expr.Expression);
@@ -180,6 +201,14 @@ namespace CSLox
         public object? VisitBlockStmt(Stmt.Block stmt)
         {
             ExecuteBlock(stmt.Statements, new Environment(_environment));
+            return null;
+        }
+
+        public object? VisitClassStmt(Stmt.Class stmt)
+        {
+            _environment.Define(stmt.Name.Lexeme, null);
+            LoxClass klass = new LoxClass(stmt.Name.Lexeme);
+            _environment.Assign(stmt.Name, klass);
             return null;
         }
 

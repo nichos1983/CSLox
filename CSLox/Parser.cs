@@ -28,6 +28,8 @@ namespace CSLox
         {
             try
             {
+                if(Match(TokenType.CLASS))
+                    return ClassDeclaration();
                 if(Match(TokenType.FUN) && Check(TokenType.IDENTIFIER))
                     return Function("function");
                 if(Match(TokenType.VAR))
@@ -39,6 +41,19 @@ namespace CSLox
                 Synchronize();
                 return null!;
             }
+        }
+
+        private Stmt ClassDeclaration()
+        {
+            Token name = Consume(TokenType.IDENTIFIER, "Expect class name.");
+            Consume(TokenType.LEFT_BRACE, "Expect '{' before class body.");
+
+            List<Stmt.Function> methods = new List<Stmt.Function>();
+            while(!Check(TokenType.RIGHT_BRACE) && !IsAtEnd())
+                methods.Add(Function("method"));
+            
+            Consume(TokenType.RIGHT_BRACE, "Expect '}' after class body.");
+            return new Stmt.Class(name, methods);
         }
 
         private Stmt.Function Function(string kind)
@@ -213,8 +228,10 @@ namespace CSLox
                 Token equals = Previous();
                 Expr value = Assignment();
 
-                if(expr is Expr.Variable e)
-                    return new Expr.Assign(e.Name, value);
+                if(expr is Expr.Variable variable)
+                    return new Expr.Assign(variable.Name, value);
+                else if(expr is Expr.Get get)
+                    return new Expr.Set(get.Object, get.Name, value);
                 
                 Error(equals, "Invalid assignment target.");
             }
@@ -336,9 +353,18 @@ namespace CSLox
             while(true)
             {
                 if(Match(TokenType.LEFT_PAREN))
+                {
                     expr = FinishCall(expr);
+                }
+                else if(Match(TokenType.DOT))
+                {
+                    Token name = Consume(TokenType.IDENTIFIER, "Expect property name after '.'.");
+                    expr = new Expr.Get(expr, name);
+                }
                 else
+                {
                     break;
+                }
             }
 
             return expr;

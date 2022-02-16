@@ -20,6 +20,13 @@
             }
         },
         {
+            "Set", new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("Expr", "Object"),
+                new KeyValuePair<string, string>("Token", "Name"),
+                new KeyValuePair<string, string>("Expr", "Value")
+            }
+        },
+        {
             "Unary", new List<KeyValuePair<string, string>>{
                 new KeyValuePair<string, string>("Token", "Operator"),
                 new KeyValuePair<string, string>("Expr", "Right")
@@ -43,6 +50,12 @@
                 new KeyValuePair<string, string>("Expr", "Callee"),
                 new KeyValuePair<string, string>("Token", "Paren"),
                 new KeyValuePair<string, string>("List<Expr>", "Arguments")
+            }
+        },
+        {
+            "Get", new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("Expr", "Object"),
+                new KeyValuePair<string, string>("Token", "Name")
             }
         },
         {

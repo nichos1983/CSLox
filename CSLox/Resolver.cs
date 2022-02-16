@@ -28,31 +28,19 @@ namespace CSLox
             return null;
         }
 
+        public object? VisitClassStmt(Stmt.Class stmt)
+        {
+            Declare(stmt.Name);
+            Define(stmt.Name);
+            return null;
+        }
+
         public object? VisitVarStmt(Stmt.Var stmt)
         {
             Declare(stmt.Name);
             if(stmt.Initializer != null)
                 Resolve(stmt.Initializer);
             Define(stmt.Name);
-            return null;
-        }
-
-        public object? VisitVariableExpr(Expr.Variable expr)
-        {
-            if(_scopes.Count > 0 && _scopes[_scopes.Count - 1].ContainsKey(expr.Name.Lexeme))
-            {
-                if(_scopes[_scopes.Count - 1][expr.Name.Lexeme] == false)
-                    Lox.Error(expr.Name, "Can't read local variable in its own initializer.");
-            }
-
-            ResolveLocal(expr, expr.Name);
-            return null;
-        }
-
-        public object? VisitAssignExpr(Expr.Assign expr)
-        {
-            Resolve(expr.Value);
-            ResolveLocal(expr, expr.Name);
             return null;
         }
 
@@ -103,28 +91,6 @@ namespace CSLox
             return null;
         }
 
-        public object? VisitBinaryExpr(Expr.Binary expr)
-        {
-            Resolve(expr.Left);
-            Resolve(expr.Right);
-            return null;
-        }
-
-        public object? VisitCallExpr(Expr.Call expr)
-        {
-            Resolve(expr.Callee);
-            foreach(Expr argument in expr.Arguments)
-                Resolve(argument);
-            
-            return null;
-        }
-
-        public object? VisitGroupingExpr(Expr.Grouping expr)
-        {
-            Resolve(expr.Expression);
-            return null;
-        }
-
         public object? VisitLiteralExpr(Expr.Literal expr)
         {
             return null;
@@ -137,8 +103,22 @@ namespace CSLox
             return null;
         }
 
+        public object? VisitSetExpr(Expr.Set expr)
+        {
+            Resolve(expr.Value);
+            Resolve(expr.Object);
+            return null;
+        }
+
         public object? VisitUnaryExpr(Expr.Unary expr)
         {
+            Resolve(expr.Right);
+            return null;
+        }
+
+        public object? VisitBinaryExpr(Expr.Binary expr)
+        {
+            Resolve(expr.Left);
             Resolve(expr.Right);
             return null;
         }
@@ -146,6 +126,46 @@ namespace CSLox
         public object? VisitFunctionExpr(Expr.Function expr)
         {
             ResolveFunction(expr, FunctionType.FUNCTION);
+            return null;
+        }
+
+        public object? VisitCallExpr(Expr.Call expr)
+        {
+            Resolve(expr.Callee);
+            foreach(Expr argument in expr.Arguments)
+                Resolve(argument);
+            
+            return null;
+        }
+
+        public object? VisitGetExpr(Expr.Get expr)
+        {
+            Resolve(expr.Object);
+            return null;
+        }
+
+        public object? VisitGroupingExpr(Expr.Grouping expr)
+        {
+            Resolve(expr.Expression);
+            return null;
+        }
+
+        public object? VisitVariableExpr(Expr.Variable expr)
+        {
+            if(_scopes.Count > 0 && _scopes[_scopes.Count - 1].ContainsKey(expr.Name.Lexeme))
+            {
+                if(_scopes[_scopes.Count - 1][expr.Name.Lexeme] == false)
+                    Lox.Error(expr.Name, "Can't read local variable in its own initializer.");
+            }
+
+            ResolveLocal(expr, expr.Name);
+            return null;
+        }
+
+        public object? VisitAssignExpr(Expr.Assign expr)
+        {
+            Resolve(expr.Value);
+            ResolveLocal(expr, expr.Name);
             return null;
         }
 
