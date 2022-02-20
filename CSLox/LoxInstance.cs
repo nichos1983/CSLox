@@ -22,6 +22,10 @@ namespace CSLox
             if(_fields.ContainsKey(name.Lexeme))
                 return _fields[name.Lexeme];
             
+            LoxFunction? method = _klass.FindMethod(name.Lexeme);
+            if(method != null)
+                return method.Bind(this);
+            
             throw new RuntimeError(name, $"Undefined property '{name.Lexeme}'.");
         }
 

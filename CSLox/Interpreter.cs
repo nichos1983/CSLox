@@ -66,12 +66,17 @@ namespace CSLox
         {
             object? obj = Evaluate(expr.Object);
 
-            if(obj is LoxInstance o)
+            if(obj is not LoxInstance)
                 throw new RuntimeError(expr.Name, "Only instance have fields.");
             
             object? value = Evaluate(expr.Value);
             ((LoxInstance)obj!).Set(expr.Name, value);
             return value;
+        }
+
+        public object? VisitThisExpr(Expr.This expr)
+        {
+            return LookUpVariable(expr.Keyword, expr);
         }
 
         public object? VisitUnaryExpr(Expr.Unary expr)
@@ -207,7 +212,15 @@ namespace CSLox
         public object? VisitClassStmt(Stmt.Class stmt)
         {
             _environment.Define(stmt.Name.Lexeme, null);
-            LoxClass klass = new LoxClass(stmt.Name.Lexeme);
+
+            Dictionary<string, LoxFunction> methods = new Dictionary<string, LoxFunction>();
+            foreach(Stmt.Function method in stmt.Methods)
+            {
+                LoxFunction function = new LoxFunction(method.Name.Lexeme, method.FunctionBody, _environment);
+                methods[method.Name.Lexeme] = function;
+            }
+
+            LoxClass klass = new LoxClass(stmt.Name.Lexeme, methods);
             _environment.Assign(stmt.Name, klass);
             return null;
         }

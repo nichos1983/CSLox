@@ -7,7 +7,8 @@ namespace CSLox
         private enum FunctionType
         {
             NONE,
-            FUNCTION
+            FUNCTION,
+            METHOD
         }
 
         private readonly Interpreter _interpreter;
@@ -32,6 +33,18 @@ namespace CSLox
         {
             Declare(stmt.Name);
             Define(stmt.Name);
+
+            BeginScope();
+            _scopes[_scopes.Count - 1]["this"] = true;
+
+            foreach(Stmt.Function method in stmt.Methods)
+            {
+                FunctionType declaration = FunctionType.METHOD;
+                ResolveFunction(method.FunctionBody, declaration);
+            }
+
+            EndScope();
+
             return null;
         }
 
@@ -107,6 +120,12 @@ namespace CSLox
         {
             Resolve(expr.Value);
             Resolve(expr.Object);
+            return null;
+        }
+
+        public object? VisitThisExpr(Expr.This expr)
+        {
+            ResolveLocal(expr, expr.Keyword);
             return null;
         }
 

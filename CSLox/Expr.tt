@@ -27,6 +27,11 @@
             }
         },
         {
+            "This", new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("Token", "Keyword")
+            }
+        },
+        {
             "Unary", new List<KeyValuePair<string, string>>{
                 new KeyValuePair<string, string>("Token", "Operator"),
                 new KeyValuePair<string, string>("Expr", "Right")

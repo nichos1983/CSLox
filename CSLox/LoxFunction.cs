@@ -5,7 +5,7 @@ namespace CSLox
     //    It's separated from Stmt.Function to be reusable between named function and anonymous function.
     // 3. Expr.Call is compile-time syntax node of function call.
     // 4. LoxFunction is run-time wrapper of Stmt.Function.
-    class LoxFunction : LoxCallable
+    public class LoxFunction : LoxCallable
     {
         private readonly string? _name;
         private readonly Expr.Function _declaration;
@@ -46,6 +46,13 @@ namespace CSLox
             if(string.IsNullOrEmpty(_name))
                 return "<fn>";
             return $"<fn {_name}>";
+        }
+
+        public LoxFunction Bind(LoxInstance instance)
+        {
+            Environment environment = new Environment(_closure);
+            environment.Define("this", instance);
+            return new LoxFunction(_name, _declaration, environment);
         }
     }
 
