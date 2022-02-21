@@ -1,25 +1,16 @@
 class Cake
 {
-    init()
+    init(name, flavor)
     {
-        this.flavor = "default flavor";
-        this.name = "Jack";
+        this.name = name;
+        this.flavor = flavor;
     }
 
     taste()
     {
         print this.name + " love " + this.flavor + " cake.";
     }
-
-    setProperties(name, flavor)
-    {
-        this.name = name;
-        this.flavor = flavor;
-    }
 }
 
-var cake = Cake();
-cake.flavor = "sweety";
-cake.taste();
-cake.setProperties("I", "spicy");
+var cake = Cake("I", "sweety");
 cake.taste();
