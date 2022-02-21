@@ -1,27 +1,25 @@
 class Cake
 {
+    init()
+    {
+        this.flavor = "default flavor";
+        this.name = "Jack";
+    }
+
     taste()
     {
-        print "The " + this.flavor + " cake is delicious.";
+        print this.name + " love " + this.flavor + " cake.";
+    }
+
+    setProperties(name, flavor)
+    {
+        this.name = name;
+        this.flavor = flavor;
     }
 }
 
 var cake = Cake();
 cake.flavor = "sweety";
 cake.taste();
-
-class Thing
-{
-    getCallback()
-    {
-        fun localFunction()
-        {
-            print this;
-        }
-
-        return localFunction;
-    }
-}
-
-var callback = Thing().getCallback();
-callback();
+cake.setProperties("I", "spicy");
+cake.taste();

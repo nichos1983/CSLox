@@ -8,6 +8,7 @@ namespace CSLox
         {
             NONE,
             FUNCTION,
+            INITIALIZER,
             METHOD
         }
 
@@ -40,6 +41,9 @@ namespace CSLox
             foreach(Stmt.Function method in stmt.Methods)
             {
                 FunctionType declaration = FunctionType.METHOD;
+                if(method.Name.Lexeme.Equals("init"))
+                    declaration = FunctionType.INITIALIZER;
+                
                 ResolveFunction(method.FunctionBody, declaration);
             }
 
@@ -93,7 +97,12 @@ namespace CSLox
                 Lox.Error(stmt.Keyword, "Can't return from top-level code.");
             
             if(stmt.Value != null)
+            {
+                if(_currentFunction == FunctionType.INITIALIZER)
+                    Lox.Error(stmt.Keyword, "Can't return a value from an initializer.");
+                
                 Resolve(stmt.Value);
+            }
             return null;
         }
         

@@ -145,7 +145,7 @@ namespace CSLox
 
         public object? VisitFunctionExpr(Expr.Function expr)
         {
-            return new LoxFunction(null, expr, _environment);
+            return new LoxFunction(null, expr, _environment, false);
         }
 
         public object? VisitCallExpr(Expr.Call expr)
@@ -216,7 +216,8 @@ namespace CSLox
             Dictionary<string, LoxFunction> methods = new Dictionary<string, LoxFunction>();
             foreach(Stmt.Function method in stmt.Methods)
             {
-                LoxFunction function = new LoxFunction(method.Name.Lexeme, method.FunctionBody, _environment);
+                LoxFunction function = new LoxFunction(method.Name.Lexeme, method.FunctionBody, _environment,
+                    method.Name.Lexeme.Equals("init"));
                 methods[method.Name.Lexeme] = function;
             }
 
@@ -234,7 +235,7 @@ namespace CSLox
         public object? VisitFunctionStmt(Stmt.Function stmt)
         {
             string fnName = stmt.Name.Lexeme;
-            _environment.Define(fnName, new LoxFunction(fnName, stmt.FunctionBody, _environment));
+            _environment.Define(fnName, new LoxFunction(fnName, stmt.FunctionBody, _environment, false));
             return null;
         }
 

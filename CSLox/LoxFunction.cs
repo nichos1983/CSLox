@@ -10,12 +10,14 @@ namespace CSLox
         private readonly string? _name;
         private readonly Expr.Function _declaration;
         private readonly Environment _closure;
+        private readonly bool _isInitializer;
         
-        public LoxFunction(string? name, Expr.Function declaration, Environment closure)
+        public LoxFunction(string? name, Expr.Function declaration, Environment closure, bool isInitializer)
         {
             _name = name;
             _declaration = declaration;
             _closure = closure;
+            _isInitializer = isInitializer;
         }
 
         public int Arity()
@@ -36,8 +38,15 @@ namespace CSLox
             catch(Return returnValue)
             {
                 // Fib example test shows exception is running deadly slow.
+                if(_isInitializer)
+                    return _closure.GetAt(0, "this");
+                
                 return returnValue.Value;
             }
+
+            if(_isInitializer)
+                return _closure.GetAt(0, "this");
+            
             return null;
         }
 
@@ -52,7 +61,7 @@ namespace CSLox
         {
             Environment environment = new Environment(_closure);
             environment.Define("this", instance);
-            return new LoxFunction(_name, _declaration, environment);
+            return new LoxFunction(_name, _declaration, environment, _isInitializer);
         }
     }
 
