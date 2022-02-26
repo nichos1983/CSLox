@@ -211,6 +211,14 @@ namespace CSLox
 
         public object? VisitClassStmt(Stmt.Class stmt)
         {
+            object? superclass = null;
+            if(stmt.Superclass != null)
+            {
+                superclass = Evaluate(stmt.Superclass);
+                if(superclass is not LoxClass)
+                    throw new RuntimeError(stmt.Superclass.Name, "Superclass must be a class.");
+            }
+
             _environment.Define(stmt.Name.Lexeme, null);
 
             Dictionary<string, LoxFunction> methods = new Dictionary<string, LoxFunction>();
@@ -221,7 +229,7 @@ namespace CSLox
                 methods[method.Name.Lexeme] = function;
             }
 
-            LoxClass klass = new LoxClass(stmt.Name.Lexeme, methods);
+            LoxClass klass = new LoxClass(stmt.Name.Lexeme, (LoxClass)superclass!, methods);
             _environment.Assign(stmt.Name, klass);
             return null;
         }

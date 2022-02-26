@@ -15,6 +15,7 @@
         {
             "Class", new List<KeyValuePair<string, string>>{
                 new KeyValuePair<string, string>("Token", "Name"),
+                new KeyValuePair<string, string>("Expr.Variable?", "Superclass"),
                 new KeyValuePair<string, string>("List<Stmt.Function>", "Methods")
             }
         },

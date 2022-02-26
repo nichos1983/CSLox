@@ -1,16 +1,11 @@
-class Cake
+class Doughnut
 {
-    init(name, flavor)
+    cook()
     {
-        this.name = name;
-        this.flavor = flavor;
-    }
-
-    taste()
-    {
-        print this.name + " love " + this.flavor + " cake.";
+        print "Doughnut cook.";
     }
 }
 
-var cake = Cake("I", "sweety");
-cake.taste();
+class BostonCream < Doughnut {}
+
+BostonCream().cook();

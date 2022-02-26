@@ -46,6 +46,14 @@ namespace CSLox
         private Stmt ClassDeclaration()
         {
             Token name = Consume(TokenType.IDENTIFIER, "Expect class name.");
+
+            Expr.Variable? superclass = null;
+            if(Match(TokenType.LESS))
+            {
+                Consume(TokenType.IDENTIFIER, "Expect superclass name.");
+                superclass = new Expr.Variable(Previous());
+            }
+
             Consume(TokenType.LEFT_BRACE, "Expect '{' before class body.");
 
             List<Stmt.Function> methods = new List<Stmt.Function>();
@@ -53,7 +61,7 @@ namespace CSLox
                 methods.Add(Function("method"));
             
             Consume(TokenType.RIGHT_BRACE, "Expect '}' after class body.");
-            return new Stmt.Class(name, methods);
+            return new Stmt.Class(name, superclass, methods);
         }
 
         private Stmt.Function Function(string kind)
