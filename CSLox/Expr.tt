@@ -27,6 +27,12 @@
             }
         },
         {
+            "Super", new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("Token", "Keyword"),
+                new KeyValuePair<string, string>("Token", "Method")
+            }
+        },
+        {
             "This", new List<KeyValuePair<string, string>>{
                 new KeyValuePair<string, string>("Token", "Keyword")
             }

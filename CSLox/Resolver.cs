@@ -12,10 +12,17 @@ namespace CSLox
             METHOD
         }
 
+        private enum ClassType
+        {
+            NONE,
+            CLASS
+        }
+
         private readonly Interpreter _interpreter;
         // C# doesn't support accessing Stack by index, so we use List instead.
         private readonly List<Dictionary<string, bool>> _scopes = new List<Dictionary<string, bool>>();
         private FunctionType _currentFunction = FunctionType.NONE;
+        private ClassType _currentClass = ClassType.NONE;
         
         public Resolver(Interpreter interpreter)
         {
@@ -32,6 +39,9 @@ namespace CSLox
 
         public object? VisitClassStmt(Stmt.Class stmt)
         {
+            ClassType enclosingClass = _currentClass;
+            _currentClass = ClassType.CLASS;
+
             Declare(stmt.Name);
             Define(stmt.Name);
 
@@ -40,6 +50,12 @@ namespace CSLox
 
             if(stmt.Superclass != null)
                 Resolve(stmt.Superclass);
+            
+            if(stmt.Superclass != null)
+            {
+                BeginScope();
+                _scopes[_scopes.Count - 1]["super"] = true;
+            }
 
             BeginScope();
             _scopes[_scopes.Count - 1]["this"] = true;
@@ -55,6 +71,10 @@ namespace CSLox
 
             EndScope();
 
+            if(stmt.Superclass != null)
+                EndScope();
+
+            _currentClass = enclosingClass;
             return null;
         }
 
@@ -138,8 +158,20 @@ namespace CSLox
             return null;
         }
 
+        public object? VisitSuperExpr(Expr.Super expr)
+        {
+            ResolveLocal(expr, expr.Keyword);
+            return null;
+        }
+
         public object? VisitThisExpr(Expr.This expr)
         {
+            if(_currentClass == ClassType.NONE)
+            {
+                Lox.Error(expr.Keyword, "Can't use 'this' outside of a class.");
+                return null;
+            }
+
             ResolveLocal(expr, expr.Keyword);
             return null;
         }

@@ -8,6 +8,7 @@ namespace CSLox
             R VisitLiteralExpr(Literal expr);
             R VisitLogicalExpr(Logical expr);
             R VisitSetExpr(Set expr);
+            R VisitSuperExpr(Super expr);
             R VisitThisExpr(This expr);
             R VisitUnaryExpr(Unary expr);
             R VisitBinaryExpr(Binary expr);
@@ -71,6 +72,23 @@ namespace CSLox
             public override R Accept<R>(Visitor<R> visitor)
             {
                 return visitor.VisitSetExpr(this);
+            }
+        }
+
+        public class Super : Expr
+        {
+            public readonly Token Keyword;
+            public readonly Token Method;
+
+            public Super(Token @keyword, Token @method)
+            {
+                Keyword = @keyword;
+                Method = @method;
+            }
+
+            public override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitSuperExpr(this);
             }
         }
 

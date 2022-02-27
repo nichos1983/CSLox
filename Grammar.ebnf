@@ -47,4 +47,5 @@ primary     = NUMBER | STRING | "true" | "false" | "nil"
             | "(" expression ")"
             | "fun" functionBody
             | "this"
-            | IDENTIFIER;
+            | IDENTIFIER
+            | "super" "." IDENTIFIER;

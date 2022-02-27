@@ -24,6 +24,11 @@ namespace CSLox
             return Parenthesize(expr.Name.Lexeme, expr.Object, expr.Value);
         }
 
+        public string VisitSuperExpr(Expr.Super expr)
+        {
+            return expr.Keyword.Lexeme;
+        }
+
         public string VisitThisExpr(Expr.This expr)
         {
             return expr.Keyword.Lexeme;

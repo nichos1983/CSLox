@@ -6,6 +6,19 @@ class Doughnut
     }
 }
 
-class BostonCream < Doughnut {}
+class BostonCream < Doughnut
+{
+    cook()
+    {
+        print "BostonCream cook.";
+    }
 
-BostonCream().cook();
+    test()
+    {
+        super.cook();
+    }
+}
+
+class C < BostonCream {}
+
+C().test();
